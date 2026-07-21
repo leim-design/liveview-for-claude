@@ -4,7 +4,7 @@
 
 Stop opening claude.ai settings ten times a day. LiveView sits quietly on your screen and shows your 5-hour session, weekly, and per-model (Opus, Fable, …) usage as minimal ring gauges — refreshed every minute, with reset countdowns.
 
-> 🎨 **Made by an artist, not a developer.** This app was designed and built by [Loren Kim](https://www.instagram.com/artist_lorenkim) — a visual artist and founder of the Seoul-based design studio [LEIM](https://www.leim.kr) — entirely by conversing with Claude. Every line of code, from the OAuth flow to the WPF ring gauges, was written through Claude (Cowork). The design system is hers.
+> 🎨 **Made by an artist, not a developer.** This app was designed and built by [Loren Kim](https://www.instagram.com/artist_lorenkim) — a visual artist and founder of the Korea-based design studio [LEIM](https://www.leim.kr) — entirely by conversing with Claude. Every line of code, from the OAuth flow to the WPF ring gauges, was written through Claude (Cowork). The design system is hers.
 
 ![LiveView for Claude on a designer's desk](hero.png)
 
