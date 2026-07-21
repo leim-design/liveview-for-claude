@@ -6,7 +6,11 @@ Stop opening claude.ai settings ten times a day. LiveView sits quietly on your s
 
 > 🎨 **Made by an artist, not a developer.** This app was designed and built by [Loren Kim](https://www.instagram.com/artist_lorenkim) — a visual artist and founder of the Seoul-based design studio [LEIM](https://www.leim.kr) — entirely by conversing with Claude. Every line of code, from the OAuth flow to the WPF ring gauges, was written through Claude (Cowork). The design system is hers.
 
-![screenshot placeholder](screenshots/dark.png)
+![LiveView for Claude on a designer's desk](screenshots/hero.png)
+
+| Night (warm brown) | Day (sage green) |
+|---|---|
+| ![dark theme](screenshots/dark.png) | ![light theme](screenshots/light.png) |
 
 ## Features
 
