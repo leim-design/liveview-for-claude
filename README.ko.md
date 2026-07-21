@@ -50,7 +50,7 @@
 
 ## 크레딧
 
-디자인·디렉팅: **[레임 LEIM](https://www.leim.kr)** — 브랜딩과 레터프레스 인쇄를 전문으로 하는 디자인 스튜디오 · 아티스트 **로렌킴** ([@artist_lorenkim](https://www.instagram.com/artist_lorenkim))
-개발: **Claude** (Anthropic)
+**[레임 LEIM](https://www.leim.kr)** 은 디자인·브랜딩·활판(레터프레스) 인쇄를 전문으로 하는 디자인 스튜디오로, 아티스트 **로렌킴**([@artist_lorenkim](https://www.instagram.com/artist_lorenkim))이 운영합니다.
+이 앱은 Anthropic의 **Claude**를 사용하여 제작되었습니다.
 
 라이선스: [MIT](LICENSE)

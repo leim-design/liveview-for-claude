@@ -52,7 +52,7 @@ This is an **unofficial** community tool and is not affiliated with or endorsed 
 
 ## Credits
 
-Designed & directed by **[LEIM](https://www.leim.kr)** — a design studio specializing in branding and letterpress print, run by artist **Loren Kim** ([@artist_lorenkim](https://www.instagram.com/artist_lorenkim)).
-Built with **Claude** by Anthropic.
+**[LEIM](https://www.leim.kr)** is a design studio specializing in design, branding, and letterpress printing, run by artist **Loren Kim** ([@artist_lorenkim](https://www.instagram.com/artist_lorenkim)).
+This app was built with **Claude** by Anthropic.
 
 License: [MIT](LICENSE) · 한국어 안내는 [README.ko.md](README.ko.md)
