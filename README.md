@@ -2,6 +2,10 @@
 
 **A tiny always-on-top widget for Windows that shows your Claude usage in real time.**
 
+![License](https://img.shields.io/badge/license-MIT-4A5449) ![Platform](https://img.shields.io/badge/platform-Windows-C4846B) ![Auth](https://img.shields.io/badge/auth-official%20OAuth-66755F) ![Unofficial](https://img.shields.io/badge/status-unofficial-8A9184)
+
+![LiveView for Claude — live demo](liveview-demo.gif)
+
 Stop opening claude.ai settings ten times a day. LiveView sits quietly on your screen and shows your 5-hour session, weekly, and per-model (Opus, Fable, …) usage as minimal ring gauges — refreshed every minute, with reset countdowns.
 
 > 🎨 **Made by an artist, not a developer.** This app was designed and built by [Loren Kim](https://www.instagram.com/artist_lorenkim) — a visual artist and founder of the Korea-based design studio [LEIM](https://www.leim.kr) — entirely by conversing with Claude. Every line of code, from the OAuth flow to the WPF ring gauges, was written through Claude (Cowork). The design system is hers.
