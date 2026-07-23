@@ -42,10 +42,11 @@ $script:UiLang = 'en'
 try {
     if ([System.Globalization.CultureInfo]::CurrentUICulture.TwoLetterISOLanguageName -eq 'ko') { $script:UiLang = 'ko' }
 } catch { }
+if ($env:LIVEVIEW_LANG -eq 'en' -or $env:LIVEVIEW_LANG -eq 'ko') { $script:UiLang = $env:LIVEVIEW_LANG }
 
 $script:AllStrings = @{
     ko = @{
-        title='사용량 라이브뷰'; tipTheme='라이트/다크 전환'; tipRefresh='지금 새로고침'; tipSettings='계정 연결'; tipClose='닫기'
+        title='사용량 라이브뷰'; tipTheme='라이트/다크 전환'; tipRefresh='지금 새로고침'; tipSettings='계정 연결'; tipMinimize='최소화'; tipClose='닫기'
         setTitle='Claude 계정 연결'
         setDesc='아래 버튼을 누르면 브라우저에 Claude 로그인 화면이 열려요. 로그인하고 [허용]을 누르면 나오는 코드를 복사해서 입력칸에 붙여넣은 뒤 [연결]을 누르세요.'
         btnOpenLogin='1. 브라우저에서 로그인 열기'; btnConnect='2. 연결'; btnCloseSet='닫기'
@@ -71,7 +72,7 @@ $script:AllStrings = @{
         dateFmt='M/d HH:mm'
     }
     en = @{
-        title='LiveView for Claude'; tipTheme='Toggle light/dark'; tipRefresh='Refresh now'; tipSettings='Connect account'; tipClose='Close'
+        title='LiveView for Claude'; tipTheme='Toggle light/dark'; tipRefresh='Refresh now'; tipSettings='Connect account'; tipMinimize='Minimize'; tipClose='Close'
         setTitle='Connect your Claude account'
         setDesc='Click the button below to open the Claude sign-in page in your browser. After you sign in and click [Authorize], copy the code shown, paste it into the field, then click [Connect].'
         btnOpenLogin='1. Open sign-in in browser'; btnConnect='2. Connect'; btnCloseSet='Close'
@@ -343,6 +344,7 @@ function Get-ArcBrush([double]$pct) {
           <TextBlock x:Name="BtnTheme" Text="&#x25D0;" Foreground="#9A928A" FontSize="13" Margin="0,0,10,0" Cursor="Hand" ToolTip="라이트/다크 전환"/>
           <TextBlock x:Name="BtnRefresh" Text="&#x21BB;" Foreground="#9A928A" FontSize="13" Margin="0,0,10,0" Cursor="Hand" ToolTip="지금 새로고침"/>
           <TextBlock x:Name="BtnSettings" Text="&#x2699;" Foreground="#9A928A" FontSize="13" Margin="0,0,10,0" Cursor="Hand" ToolTip="계정 연결"/>
+          <TextBlock x:Name="BtnMinimize" Text="&#x2013;" Background="Transparent" Padding="4,2" Foreground="#9A928A" FontSize="16" Margin="0,0,8,0" Cursor="Hand" ToolTip="최소화" VerticalAlignment="Center"/>
           <TextBlock x:Name="BtnClose" Text="&#x2715;" Foreground="#9A928A" FontSize="11" Cursor="Hand" ToolTip="닫기" VerticalAlignment="Center"/>
         </StackPanel>
       </Grid>
@@ -399,7 +401,7 @@ function Get-ArcBrush([double]$pct) {
 $reader = New-Object System.Xml.XmlNodeReader $xaml
 $script:win = [Windows.Markup.XamlReader]::Load($reader)
 
-foreach ($n in @('RootBorder','TitleText','PlanText','BtnPanel','BtnTheme','BtnRefresh','BtnSettings','BtnClose',
+foreach ($n in @('RootBorder','TitleText','PlanText','BtnPanel','BtnTheme','BtnRefresh','BtnSettings','BtnMinimize','BtnClose',
                  'RowsPanel','StatusText','SettingsPanel','SetCard','SetTitle','SetDesc','BtnOpenLogin','BtnOpenLoginText',
                  'CodeBox','BtnCancelSettings','BtnConnect','BtnConnectText',
                  'ConnectedView','ConnectedText','BtnDisconnect','BtnReconnect','BtnReconnectText','ConnectView','CreditText','VersionText')) {
@@ -413,6 +415,7 @@ $script:VersionText.Text = ($script:AppName + ' v' + $script:AppVersion)
 $script:BtnTheme.ToolTip = $script:S.tipTheme
 $script:BtnRefresh.ToolTip = $script:S.tipRefresh
 $script:BtnSettings.ToolTip = $script:S.tipSettings
+$script:BtnMinimize.ToolTip = $script:S.tipMinimize
 $script:BtnClose.ToolTip = $script:S.tipClose
 $script:SetTitle.Text = $script:S.setTitle
 $script:SetDesc.Text = $script:S.setDesc
@@ -769,7 +772,7 @@ $script:timer.Add_Tick({
 
 # --------------------------- 이벤트 ---------------------------
 function Test-Interactive($element) {
-    $interactive = @($script:BtnClose, $script:BtnRefresh, $script:BtnSettings, $script:BtnTheme,
+    $interactive = @($script:BtnClose, $script:BtnMinimize, $script:BtnRefresh, $script:BtnSettings, $script:BtnTheme,
                      $script:BtnCancelSettings, $script:BtnConnect, $script:BtnOpenLogin, $script:CodeBox,
                      $script:BtnReconnect, $script:BtnDisconnect, $script:CreditText)
     $node = $element
@@ -804,6 +807,12 @@ $script:win.Add_MouseLeave({
 
 $script:BtnClose.Add_MouseLeftButtonUp({
     $script:win.Close()
+})
+
+$script:BtnMinimize.Add_MouseLeftButtonUp({
+    param($s, $e)
+    $script:win.WindowState = [System.Windows.WindowState]::Minimized
+    if ($e) { $e.Handled = $true }
 })
 
 $script:BtnTheme.Add_MouseLeftButtonUp({
