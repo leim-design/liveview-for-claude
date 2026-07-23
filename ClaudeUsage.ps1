@@ -344,7 +344,7 @@ function Get-ArcBrush([double]$pct) {
           <TextBlock x:Name="BtnTheme" Text="&#x25D0;" Foreground="#9A928A" FontSize="13" Margin="0,0,10,0" Cursor="Hand" ToolTip="라이트/다크 전환"/>
           <TextBlock x:Name="BtnRefresh" Text="&#x21BB;" Foreground="#9A928A" FontSize="13" Margin="0,0,10,0" Cursor="Hand" ToolTip="지금 새로고침"/>
           <TextBlock x:Name="BtnSettings" Text="&#x2699;" Foreground="#9A928A" FontSize="13" Margin="0,0,10,0" Cursor="Hand" ToolTip="계정 연결"/>
-          <TextBlock x:Name="BtnMinimize" Text="&#x2013;" Background="Transparent" Padding="4,2" Foreground="#9A928A" FontSize="16" Margin="0,0,8,0" Cursor="Hand" ToolTip="최소화" VerticalAlignment="Center"/>
+          <TextBlock x:Name="BtnMinimize" Text="&#x2013;" Background="Transparent" Foreground="#9A928A" FontSize="13" Margin="0,0,10,0" Cursor="Hand" ToolTip="최소화" VerticalAlignment="Center"/>
           <TextBlock x:Name="BtnClose" Text="&#x2715;" Foreground="#9A928A" FontSize="11" Cursor="Hand" ToolTip="닫기" VerticalAlignment="Center"/>
         </StackPanel>
       </Grid>
@@ -406,6 +406,44 @@ foreach ($n in @('RootBorder','TitleText','PlanText','BtnPanel','BtnTheme','BtnR
                  'CodeBox','BtnCancelSettings','BtnConnect','BtnConnectText',
                  'ConnectedView','ConnectedText','BtnDisconnect','BtnReconnect','BtnReconnectText','ConnectView','CreditText','VersionText')) {
     Set-Variable -Name $n -Value $script:win.FindName($n) -Scope Script
+}
+
+# 작업표시줄/창 아이콘 (위젯 폴더의 widget.ico)
+# WindowStyle=None 창은 WPF Icon 속성만으로는 작업표시줄 아이콘이 안 바뀌므로 Win32 WM_SETICON으로 강제 설정
+try {
+    $script:iconPath = Join-Path $PSScriptRoot 'widget.ico'
+    if (Test-Path $script:iconPath) {
+        $bi = New-Object System.Windows.Media.Imaging.BitmapImage
+        $bi.BeginInit()
+        $bi.UriSource = New-Object System.Uri $script:iconPath
+        $bi.CacheOption = [System.Windows.Media.Imaging.BitmapCacheOption]::OnLoad
+        $bi.EndInit()
+        $script:win.Icon = $bi
+        Add-Type -AssemblyName System.Drawing
+        if (-not ('Native.IconSetter' -as [type])) {
+            Add-Type -Namespace Native -Name IconSetter -MemberDefinition '[System.Runtime.InteropServices.DllImport("user32.dll")] public static extern System.IntPtr SendMessage(System.IntPtr hWnd, int Msg, System.IntPtr wParam, System.IntPtr lParam);'
+        }
+        # PowerShell 호스트와 분리된 고유 작업표시줄 ID (안 하면 작업표시줄이 PowerShell 아이콘을 씀)
+        if (-not ('Native.Aumid' -as [type])) {
+            Add-Type -Namespace Native -Name Aumid -MemberDefinition '[System.Runtime.InteropServices.DllImport("shell32.dll")] public static extern void SetCurrentProcessExplicitAppUserModelID([System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPWStr)] string AppID);'
+        }
+        try { [Native.Aumid]::SetCurrentProcessExplicitAppUserModelID('LEIM.LiveViewForClaude') } catch { }
+        $script:win.Add_SourceInitialized({
+            try {
+                $hwnd = (New-Object System.Windows.Interop.WindowInteropHelper($script:win)).Handle
+                $script:iconSmall = New-Object System.Drawing.Icon($script:iconPath, 16, 16)
+                $script:iconBig   = New-Object System.Drawing.Icon($script:iconPath, 32, 32)
+                [Native.IconSetter]::SendMessage($hwnd, 0x80, [System.IntPtr]0, $script:iconSmall.Handle) | Out-Null
+                [Native.IconSetter]::SendMessage($hwnd, 0x80, [System.IntPtr]1, $script:iconBig.Handle) | Out-Null
+            } catch {
+                try { Add-Content -Path $script:LogPath -Value ((Get-Date).ToString('s') + ' ICON WMSET ERR ' + $_.Exception.Message) -Encoding UTF8 } catch { }
+            }
+        })
+    } else {
+        try { Add-Content -Path $script:LogPath -Value ((Get-Date).ToString('s') + ' ICON MISSING ' + $script:iconPath) -Encoding UTF8 } catch { }
+    }
+} catch {
+    try { Add-Content -Path $script:LogPath -Value ((Get-Date).ToString('s') + ' ICON ERR ' + $_.Exception.Message) -Encoding UTF8 } catch { }
 }
 
 # 언어 적용 (시스템 언어에 따라 자동)
